@@ -48,6 +48,7 @@ public Client (String name, double money){
         for(Product product:products) {
             totalPrice += product.getPrice();
         }
+        money -= totalPrice;
     }
     
     //public boolean isEnoughMoney(double amount) {
