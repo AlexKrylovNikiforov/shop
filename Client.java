@@ -25,7 +25,7 @@ public Client (String name, double money){
         return basket;
     }
 
-    public void addProductToBasket(Product product, int count, double price) {
+    public void addProductToBasket(Product product, int count) {
             if(basket.containsKey(product)) {
                 basket.put(product, basket.get(product) + count);
             } else {
@@ -43,11 +43,16 @@ public Client (String name, double money){
     }
 
     private void payForProducts(Map<Product, Integer> basket, double totalPrice) {
-        money -= totalPrice;
+        totalPrice = 0.0;
+        Set<Product> products = basket.keySet();
+        for(Product product:products) {
+            totalPrice += product.getPrice();
+        }
     }
-    public boolean isEnoughMoney(double amount) {
-        return (amount <= money);
-    }
+    
+    //public boolean isEnoughMoney(double amount) {
+    //    return (amount <= money);
+    //}
 
 
 }
