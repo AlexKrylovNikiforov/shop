@@ -54,4 +54,20 @@ public class Shop {
         return null;
     }
 
+    protected void transferProductsToCashier(Map.Entry<Product, Integer> requestFromCashier) {
+        Product product = requestFromCashier.getKey();
+        int count = requestFromCashier.getValue();
+        warehouse.removeProduct(product, count);
+    }
+
+    public void returnProductsFromCashier(Map.Entry<Product, Integer> returnedFromCashier) {
+        Product product = returnedFromCashier.getKey();
+        int count = returnedFromCashier.getValue();
+        warehouse.addProduct(product, count);
+    }
+
+    public void sendMoneyToBank(double amount) {
+        bank += amount;
+    }
+
 }

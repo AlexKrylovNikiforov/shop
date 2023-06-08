@@ -78,17 +78,20 @@ public class Shopping {
                 }
             } while (productCount > productEntry.getValue() || productCount < 1);
 
-            double priceToPay = 0.0;
-            do {
-                client.addProductToBasket(productEntry.getKey(),productEntry.getValue());
-                priceToPay += productEntry.getKey().getPrice();
+
+            client.addProductToBasket(productEntry.getKey(),productEntry.getValue());
             }
-            while (priceToPay <= client.getMoney());
-        }
     }
 
     public void buyingProduct(Client client, Cashier cashier) {
-
+        double totalPrice = cashier.sellProducts(client);
+        boolean readyToPay = client.isReadyToPay();
+        if(!readyToPay) {
+            cashier.returnDeclinedProducts(client.getBasket(), shop);
+        }
+        client.payForProducts(totalPrice);
+        double amount = cashier.receiveFromBuyer(client);
+        shop.sendMoneyToBank(amount);
     }
 
     private boolean isProductInSale(Set<Product> products, String selectedProduct) {

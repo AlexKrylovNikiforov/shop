@@ -18,7 +18,7 @@ public class Warehouse {
             productMap.put(product, count);
         }
     }
-    private void removeProduct(Product product, Integer count) {
+    public void removeProduct(Product product, Integer count) {
       if (productMap.containsKey(product) && productMap.get(product) >= count) {
            Integer currentCount = productMap.get(product);
            productMap.put(product, currentCount - count);

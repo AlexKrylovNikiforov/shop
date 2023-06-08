@@ -37,19 +37,31 @@ public class Cashier {
         return ageExp;
     }
 
-    public double sellProducts(Map<Product, Integer> clientBasket) {
-        double priceToPay = 0.0;
-        Set<Map.Entry<Product,Integer>> productsToSell = clientBasket.entrySet();
-        for (Map.Entry<Product,Integer> product: productsToSell) {
-            priceToPay += product.getKey().getPrice();
-            productsToSell.remove(product);
+    public double sellProducts(Client client) {
+        Set<Map.Entry<Product, Integer>> productsToPay = client.getBasket().entrySet();
+        double totalAmount = 0.0;
+        for (Map.Entry<Product, Integer> entry : productsToPay) {
+            totalAmount += entry.getKey().getPrice();
         }
-        return priceToPay;
+        return totalAmount;
     }
 
-    //TODO
-    public double receiveReturnedProducts(Map<Product, Integer> productToReturn, Shop shop) {
-        return 0.0;
+    public double receiveFromBuyer(Client client) {
+        return sellProducts(client);
+    }
+
+    public void requestProductFromShop (Client client, Shop shop) {
+        Set<Map.Entry<Product, Integer>> productsToRequest = client.getBasket().entrySet();
+        for(Map.Entry<Product, Integer> entry:productsToRequest) {
+            shop.transferProductsToCashier(entry);
+        }
+    }
+
+    public void returnDeclinedProducts(Map<Product, Integer> clientsBasket, Shop shop) {
+        Set<Map.Entry<Product, Integer>> productsToReturn = clientsBasket.entrySet();
+        for(Map.Entry<Product, Integer> entry:productsToReturn) {
+            shop.returnProductsFromCashier(entry);
+        }
     }
 
 }

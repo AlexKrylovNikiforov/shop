@@ -8,12 +8,18 @@ public class Client {
     private final String name;
     private double money;
     private Map<Product, Integer> basket;
+    private boolean readyToPay;
 
-public Client (String name, double money){
+    public Client (String name, double money){
     this.name = name;
     this.money = money;
     basket  = new HashMap<>();
 }
+
+    public boolean isReadyToPay() {
+        return readyToPay;
+    }
+
     public String getName() {
         return name;
     }
@@ -43,9 +49,12 @@ public Client (String name, double money){
         }
     }
 
-    private void payForProducts(double priceToPay) {
-        money -= priceToPay;
+    public void payForProducts(double priceToPay) {
+            money -= priceToPay;
+            basket.clear();
     }
+
+
     private boolean isEnoughMoney(double amount) {
         return (amount <= money);
     }
