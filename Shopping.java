@@ -56,7 +56,9 @@ public class Shopping {
 
         //start shopping
         System.out.println("Welcome to our shop!");
-        while (true) {
+        System.out.println("Print F in any moment in order to finish");
+        String reply = sc.nextLine();
+        while (!reply.equalsIgnoreCase("F")) {
             Map<Product, Integer> currentProducts = shop.getActualWarehouse();
             System.out.println("Here you can see our products today:" + currentProducts);
             System.out.print("Select product: ");
@@ -80,7 +82,7 @@ public class Shopping {
 
 
             client.addProductToBasket(productEntry.getKey(),productEntry.getValue());
-            }
+        }
     }
 
     public void buyingProduct(Client client, Cashier cashier) {
