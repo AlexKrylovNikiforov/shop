@@ -1,5 +1,6 @@
 package shop;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,14 +37,19 @@ public class Cashier {
         return ageExp;
     }
 
-    public double sellProducts(Product product, int count, Shop shop) {
-        double moneyToPay = product.getPrice();
-        return moneyToPay;
+    public double sellProducts(Map<Product, Integer> clientBasket) {
+        double priceToPay = 0.0;
+        Set<Map.Entry<Product,Integer>> productsToSell = clientBasket.entrySet();
+        for (Map.Entry<Product,Integer> product: productsToSell) {
+            priceToPay += product.getKey().getPrice();
+            productsToSell.remove(product);
+        }
+        return priceToPay;
     }
 
+    //TODO
     public double receiveReturnedProducts(Map<Product, Integer> productToReturn, Shop shop) {
-
+        return 0.0;
     }
-
 
 }

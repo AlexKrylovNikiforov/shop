@@ -2,6 +2,7 @@ package shop;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Client {
     private final String name;
@@ -42,18 +43,12 @@ public Client (String name, double money){
         }
     }
 
-    private void payForProducts(Map<Product, Integer> basket, double totalPrice) {
-        totalPrice = 0.0;
-        Set<Product> products = basket.keySet();
-        for(Product product:products) {
-            totalPrice += product.getPrice();
-        }
-        money -= totalPrice;
+    private void payForProducts(double priceToPay) {
+        money -= priceToPay;
     }
-    
-    //public boolean isEnoughMoney(double amount) {
-    //    return (amount <= money);
-    //}
+    private boolean isEnoughMoney(double amount) {
+        return (amount <= money);
+    }
 
 
 }

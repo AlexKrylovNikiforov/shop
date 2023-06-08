@@ -78,9 +78,17 @@ public class Shopping {
                 }
             } while (productCount > productEntry.getValue() || productCount < 1);
 
-            client.addProductToBasket(productEntry.getKey(),productEntry.getValue(), productEntry.getKey().getPrice());
-
+            double priceToPay = 0.0;
+            do {
+                client.addProductToBasket(productEntry.getKey(),productEntry.getValue());
+                priceToPay += productEntry.getKey().getPrice();
+            }
+            while (priceToPay <= client.getMoney());
         }
+    }
+
+    public void buyingProduct(Client client, Cashier cashier) {
+
     }
 
     private boolean isProductInSale(Set<Product> products, String selectedProduct) {
