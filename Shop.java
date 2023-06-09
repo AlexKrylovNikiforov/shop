@@ -40,6 +40,8 @@ public class Shop {
         }
         return null;
     }
+    //private Map<Product, Integer> createProductMap(List<Product> products)
+    
     // initializing a warehouse with productMap
     private void initializeWarehouse(Map<Product, Integer> productMap) {
         Warehouse warehouse = new Warehouse(productMap);
