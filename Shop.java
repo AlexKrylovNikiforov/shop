@@ -56,9 +56,12 @@ public class Shop {
          for(Map.Entry<Product, Integer> entry : clientBasket.entrySet()) {
              ProductType productType = entry.getKey().getProductDescription().getProductType();
              Cashier cashier = getCashierByProductType(productType);
+             // прописать логику: забрать getProductTypes у кассира, пройти по списку товаров, для каждого кассира
+             //создать отдельную корзину с говарами его категорий, передать кассиру для сканирования и подсчета
          }
 
-         // scanning products
+         // scanning products кассир сканирует свою корзину, выводит сумму покупки
+         // магазин вызывает isEnoughMoneyToPay у покупателя, если да, переходим к процессингу, если нет - товары просто удаляются из корзины
 
         // processing payment
      }

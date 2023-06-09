@@ -16,7 +16,7 @@ public class Shopping {
 //        clientList.add(new Client("Edward", 65.00));
 
         //creating Cashiers перенести в Cashier, List<Product, Integer> productType передавать через конструктор
-        List<Cashier> cashiers = shop.getCashiers();
+        //List<Cashier> cashiers = shop.getCashiers();
 //        Cashier carlos = new Cashier("Carlos", 12);
 //        Cashier johanna = new Cashier("Johanna", 7);
 //        Set<ProductType> productTypesCarlos = carlos.getProductTypes();
@@ -25,7 +25,7 @@ public class Shopping {
 //        Collections.addAll(productTypesJohanna, ProductType.ALCOHOL, ProductType.TOBACCO, ProductType.FRUIT);
 //        Collections.addAll(cashiers, carlos, johanna);
 
-        //creating products перенести в Product
+        //creating products перенести в Shop
         ProductDescription meat = new ProductDescription(ProductType.MEAT);
         ProductDescription vegetable = new ProductDescription(ProductType.VEGETABLE);
         ProductDescription fish = new ProductDescription(ProductType.FISH);
