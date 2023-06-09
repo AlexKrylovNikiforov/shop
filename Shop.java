@@ -7,14 +7,23 @@ import java.util.Set;
 
 public class Shop {
     private List<Cashier> cashiers = new ArrayList<>();
-    private Warehouse warehouse = new Warehouse();
+    private Warehouse warehouse;
     private double bank;
+
+    private void setBank(double bank) {
+        this.bank = bank;
+    }
+
+    public Shop(List<Cashier> cashiers, Warehouse warehouse, double bank) {
+        this.cashiers = cashiers;
+        this.warehouse = warehouse;
+    }
 
     public Warehouse getWarehouse() {
         return warehouse;
     }
 
-    public double getBank() {
+    private double getBank() {
         return bank;
     }
     public List<Cashier> getCashiers() {
@@ -22,6 +31,7 @@ public class Shop {
         return cashiers;
     }
 
+    // setting cashier to client according to product type
     public Cashier getCashierByProductType(ProductType productType) {
         for(Cashier cashier: cashiers) {
             if(cashier.getProductTypes().contains(productType)) {
@@ -30,44 +40,39 @@ public class Shop {
         }
         return null;
     }
-    public Map<Product, Integer> getActualWarehouse() {
+    // initializing a warehouse with productMap
+    private void initializeWarehouse(Map<Product, Integer> productMap) {
+        Warehouse warehouse = new Warehouse(productMap);
+    }
+
+    // returning actual warehouse as map Product, Quantity
+    public Map<Product, Integer> getActualProductMap() {
         return warehouse.getProductMap();
     }
 
-    public Integer getProductCountByName(String name) {
-        Set<Map.Entry<Product, Integer>> entries = getActualWarehouse().entrySet();
-        for (Map.Entry<Product, Integer> entry : entries) {
-            if(entry.getKey().equals(name)) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
+     public void processSale(Client client, List<Cashier> cashiers) {
+        //checking client's basket and setting cashiers for client
+         Map<Product, Integer> clientBasket = client.getBasket();
+         for(Map.Entry<Product, Integer> entry : clientBasket.entrySet()) {
+             ProductType productType = entry.getKey().getProductDescription().getProductType();
+             Cashier cashier = getCashierByProductType(productType);
+         }
 
-    public Map.Entry<Product, Integer> getProductEntryByName(String name) {
-        Set<Map.Entry<Product, Integer>> entries = getActualWarehouse().entrySet();
-        for (Map.Entry<Product, Integer> entry: entries) {
-            if(entry.getKey().equals(name)) {
-                return entry;
-            }
-        }
-        return null;
-    }
+         // scanning products
 
-    protected void transferProductsToCashier(Map.Entry<Product, Integer> requestFromCashier) {
-        Product product = requestFromCashier.getKey();
-        int count = requestFromCashier.getValue();
-        warehouse.removeProduct(product, count);
-    }
+        // processing payment
+     }
 
-    public void returnProductsFromCashier(Map.Entry<Product, Integer> returnedFromCashier) {
-        Product product = returnedFromCashier.getKey();
-        int count = returnedFromCashier.getValue();
-        warehouse.addProduct(product, count);
-    }
+//    public Map.Entry<Product, Integer> getProductEntryByName(String name) {
+//        Set<Map.Entry<Product, Integer>> entries = getActualWarehouse().entrySet();
+//        for (Map.Entry<Product, Integer> entry: entries) {
+//            if(entry.getKey().equals(name)) {
+//                return entry;
+//            }
+//        }
+//        return null;
+//    }
 
-    public void sendMoneyToBank(double amount) {
-        bank += amount;
-    }
+
 
 }

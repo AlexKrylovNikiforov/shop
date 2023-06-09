@@ -5,7 +5,11 @@ import java.util.Map;
 
 public class Warehouse {
 
-    private Map<Product, Integer> productMap = new HashMap<>();
+    private Map<Product, Integer> productMap;
+
+    public Warehouse(Map<Product, Integer> productMap) {
+        this.productMap = productMap;
+    }
 
     public Map<Product, Integer> getProductMap() {
         return productMap;

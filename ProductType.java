@@ -1,11 +1,15 @@
 package shop;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public enum ProductType {
-    FRUIT("Fruit", "Miscellaneous fruits"),
-    MEAT("Meat", "Variety of meat"),
     ALCOHOL("Alcohol", "Different alcohol beverages"),
-    FISH("Fish", "A lot of fish"),
     TOBACCO("Tobacco", "Miscellaneous tobacco"),
+    MEAT("Meat", "Variety of meat"),
+    FISH("Fish", "A lot of fish"),
+    FRUIT("Fruit", "Miscellaneous fruits"),
     VEGETABLE("Vegetable", "Miscellaneous vegetables");
 
     private String label;
@@ -24,12 +28,12 @@ public enum ProductType {
         this.description = description;
     }
 
-    public static ProductType fromLabel(String label) {
-        for (ProductType productType : ProductType.values()) {
-            if (productType.getLabel().equals(label)) {
-                return productType;
-            }
-        }
-        throw new IllegalArgumentException("No enum constant with label: " + label);
-    }
+//    public static ProductType fromLabel(String label) {
+//        for (ProductType productType : ProductType.values()) {
+//            if (productType.getLabel().equals(label)) {
+//                return productType;
+//            }
+//        }
+//        throw new IllegalArgumentException("No enum constant with label: " + label);
+//    }
 }

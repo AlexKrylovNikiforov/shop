@@ -1,7 +1,5 @@
 package shop;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,18 +7,19 @@ public class Cashier {
 
     private String name;
     private int ageExp; // лет опыта
-    private final Set<ProductType> productTypes = new HashSet<>();
+    private Set<ProductType> productTypes;
 
 
-    public Cashier(String name, int ageExp) {
+    public Cashier(String name, int ageExp, Set<ProductType> productTypes) {
         this.name = name;
         this.ageExp = ageExp;
+        this.productTypes = productTypes;
     }
 
-    public void addProductType(ProductType productType) {
-
-        productTypes.add(productType);
-    }
+//    public void addProductType(ProductType productType) {
+//
+//        productTypes.add(productType);
+//    }
 
     public Set<ProductType> getProductTypes() {
 
@@ -32,36 +31,17 @@ public class Cashier {
         return name;
     }
 
-    public int getAgeExp() {
+//    public int getAgeExp() {
+//
+//        return ageExp;
+//    }
 
-        return ageExp;
-    }
-
-    public double sellProducts(Client client) {
-        Set<Map.Entry<Product, Integer>> productsToPay = client.getBasket().entrySet();
+    public double scanProducts(Map<Product, Integer> clientsBasket) {
         double totalAmount = 0.0;
-        for (Map.Entry<Product, Integer> entry : productsToPay) {
+        for (Map.Entry<Product, Integer> entry : clientsBasket.entrySet()) {
             totalAmount += entry.getKey().getPrice();
         }
         return totalAmount;
-    }
-
-    public double receiveFromBuyer(Client client) {
-        return sellProducts(client);
-    }
-
-    public void requestProductFromShop (Client client, Shop shop) {
-        Set<Map.Entry<Product, Integer>> productsToRequest = client.getBasket().entrySet();
-        for(Map.Entry<Product, Integer> entry:productsToRequest) {
-            shop.transferProductsToCashier(entry);
-        }
-    }
-
-    public void returnDeclinedProducts(Map<Product, Integer> clientsBasket, Shop shop) {
-        Set<Map.Entry<Product, Integer>> productsToReturn = clientsBasket.entrySet();
-        for(Map.Entry<Product, Integer> entry:productsToReturn) {
-            shop.returnProductsFromCashier(entry);
-        }
     }
 
 }
