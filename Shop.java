@@ -40,7 +40,13 @@ public class Shop {
         }
         return null;
     }
-    //private Map<Product, Integer> createProductMap(List<Product> products)
+    
+    //private List<Integer> getProductCounts ??? подумать 
+    //
+    //
+    //private Map<Product, Integer> createProductMap(List<Product> products, int count) {
+    //    return null;
+    //}
     
     // initializing a warehouse with productMap
     private void initializeWarehouse(Map<Product, Integer> productMap) {
