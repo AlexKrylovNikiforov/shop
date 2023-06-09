@@ -25,7 +25,8 @@ public class Shopping {
 //        Collections.addAll(productTypesJohanna, ProductType.ALCOHOL, ProductType.TOBACCO, ProductType.FRUIT);
 //        Collections.addAll(cashiers, carlos, johanna);
 
-        //creating products перенести в Shop, там через initializeWarehouse создаем склад с переданными товарами (все, что внизу, объединяем в createProductMap() в Product? Shop?)
+        //creating products перенести в Shop, там через initializeWarehouse создаем склад с переданными товарами (все, что внизу, 
+        //объединяем в createProductMap() в Product? Shop? List товаров для передачи в мапу создавать через  new ArrayList<Products>() {{ add(new Product(product.getName())) }}
         ProductDescription meat = new ProductDescription(ProductType.MEAT);
         ProductDescription vegetable = new ProductDescription(ProductType.VEGETABLE);
         ProductDescription fish = new ProductDescription(ProductType.FISH);
