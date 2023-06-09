@@ -13,7 +13,7 @@ public class Shop {
     private void setBank(double bank) {
         this.bank = bank;
     }
-
+    //when creating new Shop, setBank(amount) better to be used
     public Shop(List<Cashier> cashiers, Warehouse warehouse, double bank) {
         this.cashiers = cashiers;
         this.warehouse = warehouse;
