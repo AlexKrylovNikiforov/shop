@@ -9,24 +9,10 @@ public class Shopping {
     public static void main(String[] args) {
 
     }
-    private void initialize() {
-        //creating clients
-//        clientList.add(new Client("John", 150.00));
-//        clientList.add(new Client("Sammie", 50.00));
-//        clientList.add(new Client("Edward", 65.00));
 
-        //creating Cashiers перенести в Cashier, List<Product, Integer> productType передавать через конструктор
-        //List<Cashier> cashiers = shop.getCashiers();
-//        Cashier carlos = new Cashier("Carlos", 12);
-//        Cashier johanna = new Cashier("Johanna", 7);
-//        Set<ProductType> productTypesCarlos = carlos.getProductTypes();
-//        Set<ProductType> productTypesJohanna = johanna.getProductTypes();
-//        Collections.addAll(productTypesCarlos, ProductType.MEAT, ProductType.VEGETABLE, ProductType.FISH);
-//        Collections.addAll(productTypesJohanna, ProductType.ALCOHOL, ProductType.TOBACCO, ProductType.FRUIT);
-//        Collections.addAll(cashiers, carlos, johanna);
 
-        //creating products перенести в Shop, там через initializeWarehouse создаем склад с переданными товарами (все, что внизу, 
-        //объединяем в createProductMap() в Shop List товаров для передачи в мапу создавать через  new ArrayList<Products>() {{ add(new Product(product.getName())) }}
+    private void initializeShoppingProcess() {
+        //creating products
         ProductDescription meat = new ProductDescription(ProductType.MEAT);
         ProductDescription vegetable = new ProductDescription(ProductType.VEGETABLE);
         ProductDescription fish = new ProductDescription(ProductType.FISH);
@@ -42,50 +28,91 @@ public class Shopping {
         Product cigarette = new Product("Lucky Strike", tobacco, 6.50);
         Product tomato = new Product("Tomato Pera", vegetable, 1.50);
 
-        //creating Warehouse перенести в Warehouse
-//        Warehouse warehouse = new Warehouse();
-//        warehouse.getProductMap().put(beef, 20);
-//        warehouse.getProductMap().put(tune, 20);
-//        warehouse.getProductMap().put(gin, 10);
-//        warehouse.getProductMap().put(apple, 12);
-//        warehouse.getProductMap().put(orange, 10);
-//        warehouse.getProductMap().put(cigarette, 5);
-//        warehouse.getProductMap().put(tomato, 20);
+        List<Product> productsList = new ArrayList<>();
+        productsList.add(beef);
+        productsList.add(gin);
+        productsList.add(tune);
+        productsList.add(apple);
+        productsList.add(orange);
+        productsList.add(cigarette);
+        productsList.add(tomato);
+
+        //creating cashiers
+        Set<ProductType> productTypesCarlos = new HashSet<>();
+        Set<ProductType> productTypesJohanna = new HashSet<>();
+        productTypesCarlos.add(meat.getProductType());
+        productTypesCarlos.add(fish.getProductType());
+        productTypesCarlos.add(vegetable.getProductType());
+        productTypesCarlos.add(fruit.getProductType());
+        productTypesJohanna.add(alcohol.getProductType());
+        productTypesJohanna.add(tobacco.getProductType());
+        List<Cashier> currentCashiers = new ArrayList<>();
+        Cashier carlos = new Cashier("Carlos", 12, productTypesCarlos);
+        Cashier johanna = new Cashier("Johanna", 7, productTypesJohanna);
+        currentCashiers.add(carlos);
+        currentCashiers.add(johanna);
+
+        //initializing shop
+        this.shop = new Shop(currentCashiers);
+        shop.setBank(5000.00);
+
+        //shop initializes warehouse inside itself
+        Map<Product, Integer> currentProductMap = shop.createProductMap(productsList);
+        shop.initializeWarehouse(currentProductMap);
+
     }
 
+// тоже перенести в Shop, разделить на части
+    public void initializeShoppingProcess(Client client, Shop shop) {
+        Scanner sc = new Scanner(System.in);
+        Map<Product, Integer> currentProducts = shop.getActualProductMap();
+        System.out.println("Welcome to our shop!");
+        System.out.println("Print F in any moment in order to finish");
+        String reply = sc.nextLine();
+        while (!reply.equalsIgnoreCase("F")) {
+            System.out.println("Here you can see our products today:" + currentProducts);
+            System.out.print("Select product: ");
+            String selectedProductName = sc.nextLine();
+            boolean productInSale = isProductInSale(currentProducts.keySet(), selectedProductName);
+            if(!productInSale) {
+                System.out.println("Sorry, we don't have this at the moment.\nPlease, select other product");
+                continue;
+            }
 
-//    public void startShopping(Client client) {
-//        Scanner sc = new Scanner(System.in);
-//
-//        //start shopping перенести в Shop: type: List <Cashier> cashiers, Warehouse. Все в конструктор.
-//        System.out.println("Welcome to our shop!");
-//        System.out.println("Print F in any moment in order to finish");
-//        String reply = sc.nextLine();
-//        while (!reply.equalsIgnoreCase("F")) {
-//            Map<Product, Integer> currentProducts = shop.getActualWarehouse();
-//            System.out.println("Here you can see our products today:" + currentProducts);
-//            System.out.print("Select product: ");
-//            String selectedProductName = sc.nextLine();
-//            boolean productInSale = isProductInSale(currentProducts.keySet(), selectedProductName);
-//            if(!productInSale) {
-//                System.out.println("Sorry, we don't have this at the moment.\nPlease, select other product");
-//                continue;
-//            }
-//
-//            Map.Entry<Product, Integer> productEntry = shop.getProductEntryByName(selectedProductName);
-//            int productCount;
-//            do {
-//                System.out.print("Select count of " + selectedProductName + ": ");
-//                productCount = sc.nextInt();
-//
-//                if (productCount > productEntry.getValue() || productCount < 1) {
-//                    System.out.println("You entered wrong count. Try one more time");
-//                }
-//            } while (productCount > productEntry.getValue() || productCount < 1);
-//
-//
-//            client.addProductToBasket(productEntry.getKey(),productEntry.getValue());
-//        }
+            int productCount;
+            for(Map.Entry<Product, Integer> entry: client.getBasket().entrySet()) {
+            do {
+                System.out.print("Select count of " + selectedProductName + ": ");
+                productCount = sc.nextInt();
+
+                if (productCount > entry.getValue() || productCount < 1) {
+                    System.out.println("You entered wrong count. Try one more time");
+                }
+            } while (productCount > entry.getValue() || productCount < 1);
+            client.addProductToBasket(entry.getKey(),entry.getValue());
+            }
+        }
+    }
+// переделать. Перенести performBuyingProcess в Shop, выделить первую часть в private method assignCashiersToBuyer,
+// он вернет мапу кассир: мапа продуктов. Для каждого из кассиров вызываем scanProducts, в Shop делаем метод sellProducts
+// далее уже в Shopping вызываем
+// метод performBuyingProcess и потом запрашиваем готовность платить. Если готов - вызываем payForProducts у client,
+// добавляем деньги в банк, перемещаем товары со склада, очищаем корзину клиента, если нет - просто очищаем корзину клиента и прощаемся
+    public void performShoppingProcess(Client client, Shop shop) {
+        List<Product> currentProducts = new ArrayList<>();
+        for(Map.Entry<Product, Integer> entry:client.getBasket().entrySet()) {
+            Product currentProduct = entry.getKey();
+            currentProducts.add(currentProduct);
+            List<Cashier> availableCashiers = shop.getAvailableCashiers(currentProducts);
+            if(!availableCashiers.isEmpty()) {
+                for (Cashier cashier : availableCashiers) {
+                    Map<Cashier, Map<Product,Integer>> products = new HashMap<>();
+                    Map<Product, Integer> productsToScan = shop.assignProductsToCashier(client, cashier);
+                    products.put(cashier, productsToScan);
+                }
+            }
+        }
+
     }
 
 

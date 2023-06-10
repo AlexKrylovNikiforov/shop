@@ -36,9 +36,9 @@ public class Cashier {
 //        return ageExp;
 //    }
 
-    public double scanProducts(Map<Product, Integer> clientsBasket) {
+    public double scanProducts(Map<Product, Integer> productMap) {
         double totalAmount = 0.0;
-        for (Map.Entry<Product, Integer> entry : clientsBasket.entrySet()) {
+        for (Map.Entry<Product, Integer> entry : productMap.entrySet()) {
             totalAmount += entry.getKey().getPrice();
         }
         return totalAmount;

@@ -1,22 +1,19 @@
 package shop;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Shop {
-    private List<Cashier> cashiers = new ArrayList<>();
+    private List<Cashier> cashiers;
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
     private Warehouse warehouse;
     private double bank;
 
-    private void setBank(double bank) {
-        this.bank = bank;
-    }
-    //when creating new Shop, setBank(amount) better to be used
-    public Shop(List<Cashier> cashiers, Warehouse warehouse, double bank) {
+    public Shop(List<Cashier> cashiers) {
         this.cashiers = cashiers;
-        this.warehouse = warehouse;
     }
 
     public Warehouse getWarehouse() {
@@ -26,13 +23,38 @@ public class Shop {
     private double getBank() {
         return bank;
     }
+
     public List<Cashier> getCashiers() {
 
         return cashiers;
     }
 
+
+    // initializing warehouse
+    private Integer setProductCount() {
+        Random random = new Random();
+        return random.nextInt(0, 50);
+    }
+
+    public Map<Product, Integer> createProductMap(List<Product> products) {
+        Map<Product, Integer> productMap = new HashMap<>();
+        for(Product currentProduct:products) {
+            Integer currentCount = setProductCount();
+            productMap.put(currentProduct, currentCount);
+        }
+        return productMap;
+    }
+
+    public void setBank(double amount) {
+        bank += amount;
+    }
+    // initializing a warehouse with productMap
+    public void initializeWarehouse(Map<Product, Integer> productMap) {
+        warehouse = new Warehouse(productMap);
+    }
+
     // setting cashier to client according to product type
-    public Cashier getCashierByProductType(ProductType productType) {
+    private Cashier getCashierByProductType(ProductType productType) {
         for(Cashier cashier: cashiers) {
             if(cashier.getProductTypes().contains(productType)) {
                 return cashier;
@@ -40,41 +62,48 @@ public class Shop {
         }
         return null;
     }
-    
-    //private List<Integer> getProductCounts ??? подумать 
-    //
-    //
-    //private Map<Product, Integer> createProductMap(List<Product> products, int count) {
-    //    return null;
-    //}
-    
-    // initializing a warehouse with productMap
-    private void initializeWarehouse(Map<Product, Integer> productMap) {
-        Warehouse warehouse = new Warehouse(productMap);
-    }
 
     // returning actual warehouse as map Product, Quantity
     public Map<Product, Integer> getActualProductMap() {
         return warehouse.getProductMap();
     }
 
-     public void processSale(Client client, List<Cashier> cashiers) {
-        //checking client's basket and setting cashiers for client
-         Map<Product, Integer> clientBasket = client.getBasket();
-         for(Map.Entry<Product, Integer> entry : clientBasket.entrySet()) {
+    public List<Cashier> getAvailableCashiers(List<Product> clientProducts) {
+        List<Cashier> availableCashiers = new ArrayList<>();
+        for(Product product:clientProducts) {
+            ProductType productType = product.getProductDescription().getProductType();
+            Cashier availableCashier = getCashierByProductType(productType);
+            if(availableCashier != null) {
+                availableCashiers.add(availableCashier);
+            }
+        }
+        return availableCashiers;
+    }
+
+
+    public Map<Product, Integer> assignProductsToCashier (Client client, Cashier cashier) {
+         //checking client's basket and setting cashiers for client
+         Map<Product, Integer> productsToScan = new HashMap<>();
+         for (Map.Entry<Product, Integer> entry : client.getBasket().entrySet()) {
              ProductType productType = entry.getKey().getProductDescription().getProductType();
-             Cashier cashier = getCashierByProductType(productType);
-             // прописать логику: забрать getProductTypes у кассира, пройти по списку товаров, для каждого кассира
-             //создать отдельную корзину с говарами его категорий, передать кассиру для сканирования и подсчета
+             if (cashier.equals(getCashierByProductType(productType))) {
+                 productsToScan.put(entry.getKey(), entry.getValue());
+             }
+             return null;
          }
+         return productsToScan;
+    }
 
-         // scanning products кассир сканирует свою корзину, выводит сумму покупки
-         // магазин вызывает isEnoughMoneyToPay у покупателя, если да, переходим к процессингу, если нет - товары просто удаляются из корзины
+    public double processBuying(Map<Product, Integer> productToScan) {
+        double totalPrice = 0.0;
+        for(Map.Entry<Product, Integer> entry:productToScan.entrySet()) {
+            totalPrice += entry.getKey().getPrice();
+        }
+        return totalPrice;
+    }
 
-        // processing payment
-     }
 
-//    public Map.Entry<Product, Integer> getProductEntryByName(String name) {
+    //    public Map.Entry<Product, Integer> getProductEntryByName(String name) {
 //        Set<Map.Entry<Product, Integer>> entries = getActualWarehouse().entrySet();
 //        for (Map.Entry<Product, Integer> entry: entries) {
 //            if(entry.getKey().equals(name)) {
