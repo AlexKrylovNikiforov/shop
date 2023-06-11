@@ -6,12 +6,16 @@ public class Shopping {
     private List<Client> clientList = new ArrayList<>();
     private Shop shop;
 
-    public static void main(String[] args) {
-
+    public Client getNewClient () {
+        Random r = new Random();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please, enter your name: ");
+        String name = sc.nextLine();
+        Client newClient = new Client(name, r.nextDouble(0.0, 200.0));
+        return newClient;
     }
 
-
-    private void initializeShoppingProcess() {
+    public Shop initializeShoppingBase() {
         //creating products
         ProductDescription meat = new ProductDescription(ProductType.MEAT);
         ProductDescription vegetable = new ProductDescription(ProductType.VEGETABLE);
@@ -60,14 +64,14 @@ public class Shopping {
         Map<Product, Integer> currentProductMap = shop.createProductMap(productsList);
         shop.initializeWarehouse(currentProductMap);
 
+        return shop;
     }
 
-// тоже перенести в Shop, разделить на части
     public void initializeShoppingProcess(Client client, Shop shop) {
         Scanner sc = new Scanner(System.in);
         Map<Product, Integer> currentProducts = shop.getActualProductMap();
         System.out.println("Welcome to our shop!");
-        System.out.println("Print F in any moment in order to finish");
+        System.out.println("Print F in any moment in order to finish or press ENTER");
         String reply = sc.nextLine();
         while (!reply.equalsIgnoreCase("F")) {
             System.out.println("Here you can see our products today:" + currentProducts);
@@ -78,7 +82,6 @@ public class Shopping {
                 System.out.println("Sorry, we don't have this at the moment.\nPlease, select other product");
                 continue;
             }
-
             int productCount;
             for(Map.Entry<Product, Integer> entry: client.getBasket().entrySet()) {
             do {
@@ -93,29 +96,19 @@ public class Shopping {
             }
         }
     }
-// переделать. Перенести performBuyingProcess в Shop, выделить первую часть в private method assignCashiersToBuyer,
-// он вернет мапу кассир: мапа продуктов. Для каждого из кассиров вызываем scanProducts, в Shop делаем метод sellProducts
-// далее уже в Shopping вызываем
-// метод performBuyingProcess и потом запрашиваем готовность платить. Если готов - вызываем payForProducts у client,
-// добавляем деньги в банк, перемещаем товары со склада, очищаем корзину клиента, если нет - просто очищаем корзину клиента и прощаемся
-    public void performShoppingProcess(Client client, Shop shop) {
-        List<Product> currentProducts = new ArrayList<>();
-        for(Map.Entry<Product, Integer> entry:client.getBasket().entrySet()) {
-            Product currentProduct = entry.getKey();
-            currentProducts.add(currentProduct);
-            List<Cashier> availableCashiers = shop.getAvailableCashiers(currentProducts);
-            if(!availableCashiers.isEmpty()) {
-                for (Cashier cashier : availableCashiers) {
-                    Map<Cashier, Map<Product,Integer>> products = new HashMap<>();
-                    Map<Product, Integer> productsToScan = shop.assignProductsToCashier(client, cashier);
-                    products.put(cashier, productsToScan);
-                }
+
+    public void processShopping (Client client, Shop shop) {
+        Set<Cashier> cashiers = shop.assignCashiers(client);
+        Set<Product> clientBasket = client.getBasket().keySet();
+        double priceToPay = shop.performSale(clientBasket, cashiers);
+        if(!client.isReadyToPay(priceToPay)) {
+            for(Map.Entry<Product, Integer> entry:client.getBasket().entrySet()) {
+                client.removeProductFromBasket(entry.getKey(), entry.getValue());
             }
+        } else {
+            shop.processPayment(client, priceToPay);
         }
-
     }
-
-
 
     private boolean isProductInSale(Set<Product> products, String selectedProduct) {
         if(selectedProduct == null || selectedProduct.isBlank()) {
