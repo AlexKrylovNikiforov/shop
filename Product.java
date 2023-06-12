@@ -37,10 +37,6 @@ public class Product {
         return productDescription;
     }
 
-    public void setProductDescription(ProductDescription productDescription) {
-        this.productDescription = productDescription;
-    }
-
     @Override
     public String toString() {
         return "Product: " + name + "\n" +

@@ -74,7 +74,7 @@ public class Shopping {
         System.out.println("Print F in any moment in order to finish or press ENTER");
         String reply = sc.nextLine();
         while (!reply.equalsIgnoreCase("F")) {
-            System.out.println("Here you can see our products today:" + currentProducts);
+            System.out.println("Here you can see our products today:" + currentProducts.toString());
             System.out.print("Select product: ");
             String selectedProductName = sc.nextLine();
             boolean productInSale = isProductInSale(currentProducts.keySet(), selectedProductName);
